@@ -25,5 +25,5 @@ export abstract class Picture {
         this.scale = scale;
         this.configuration = [];
 	}
-    abstract draw(gc: CanvasRenderingContext2D):void;
+    abstract draw(gc: CanvasRenderingContext2D, light: boolean):void;
 }

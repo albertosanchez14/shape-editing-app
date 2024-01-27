@@ -14,6 +14,8 @@ export class Card implements Drawable{
     size: number = 80;
     picture: Picture;
     private _hover: boolean;
+    revealed: boolean;
+    matched: boolean;
     constructor(side: string, element: string) {
         this.x = 0;
         this.y = 0;
@@ -29,6 +31,8 @@ export class Card implements Drawable{
             throw new Error("Invalid card element: " + element);
         }
         this._hover = false;
+        this.revealed = false;
+        this.matched = false;
     }
 
     get side() {
@@ -81,7 +85,7 @@ export class Card implements Drawable{
         if (this._side == "front") {
             this.picture.x = this.x + 40;
             this.picture.y = this.y + 40;
-            this.picture.draw(gc);
+            this.picture.draw(gc, this.matched);
         } else if (this._side == "back") {
             gc.save();
             gc.translate(this.x + 5, this.y + 5);

@@ -53,13 +53,18 @@ export class Star extends Picture {
             }
         ];
     }
-    draw(gc: CanvasRenderingContext2D): void {
+    draw(gc: CanvasRenderingContext2D, light:boolean): void {
         const index = this.index;
         const element = this.configuration[index];
         gc.save();
 		gc.translate(this.x, this.y);
 		gc.scale(this.scale, this.scale);
 
+        if (light) {
+			gc.globalAlpha = 0.5;
+		} else {
+			gc.globalAlpha = 1;
+		}
         gc.fillStyle = element.colors[0];
 		gc.strokeStyle = element.stroke;
 		gc.lineWidth = 5;

@@ -6,11 +6,8 @@ import {
   setSKEventListener,
   startSimpleKit,
 } from "simplekit/canvas-mode";
-import { Card } from "./drawables/card";
 import { Board } from "./board";
 
-export let HEIGHT = window.innerHeight;
-export let WIDTH = window.innerWidth;
 
 // create a new board
 const board: Board = new Board();
@@ -27,7 +24,6 @@ function handleEvent(e: SKEvent) {
     case "mousemove":
       if (gameMode == "play") {
         const { x, y } = e as SKMouseEvent;
-        console.log(board.mouseInCard(x, y));
         if (board.mouseInCard(x, y)) {
           board.hover_card(x, y);
         } else {
@@ -37,20 +33,41 @@ function handleEvent(e: SKEvent) {
       break;
     case "click":
       if (gameMode == "play") {
-        const { x, y } = e as SKMouseEvent;
+        const { x, y } = e as SKMouseEvent;   
         if (board.mouseInCard(x, y)) {
           board.reveal_card(x, y);
-          
+          board.checkMatch();
+          if (board.checkWin()) {
+            board.unhover_card(x, y);
+            gameMode = board.win();
+          }
         }
+        console.log(board._revealed_cards);
       }
       break;
-    case "drag":
-      break; 
-    case "dblclick":
+    case "keyup":
+      // Key released
+      const { key: keyup } = e as SKKeyboardEvent;
+      switch (keyup) {
+        case "x":
+          // X key
+          if (gameMode == "play") {
+            board.uncheat();
+          }
+        break;
+      }
       break;
     case "keydown":
-      break;
-    case "keyup":
+      console.log("longpress");
+      const { key: keydown } = e as SKKeyboardEvent;
+      switch (keydown) {
+        case "x":
+          // X key
+          if (gameMode == "play") {
+            board.cheat();
+          }
+        break;
+      }
       break;
     case "keypress":
       // Key pressed
@@ -60,6 +77,9 @@ function handleEvent(e: SKEvent) {
           // Space key
           if (gameMode == "start") {
             gameMode = board.play();
+          } else if (gameMode == "win") {
+            gameMode = board.start();
+            board.addPair();
           }
           break;
         case "q":
@@ -86,8 +106,6 @@ function handleEvent(e: SKEvent) {
 
 // set the draw callback (using function expression)
 setSKDrawCallback((gc: CanvasRenderingContext2D) => {
-  HEIGHT = window.innerHeight;
-  WIDTH = window.innerWidth;
   // clear the canvas
   gc.clearRect(0, 0, gc.canvas.width, gc.canvas.height);
   gc.fillStyle = "darkgrey";

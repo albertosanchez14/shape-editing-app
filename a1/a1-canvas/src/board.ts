@@ -16,7 +16,7 @@ export class Board {
     private _message: string;
     private separation: number = 10;
     private _configuration: cardTypes;
-    private _revealed_cards: number;
+    _revealed_cards: number;
     constructor() {
         this.deck = [];
         this._pairs = 0;
@@ -42,7 +42,7 @@ export class Board {
             this.deck[i].draw(gc);
         }
     }
-    addPair(): void {
+    addPair(): void { if (this._pairs >= 15) { return; }
         // Choose random card
         let available_key: string[] = [];
         for (const key in this._configuration) {
@@ -63,8 +63,8 @@ export class Board {
         this._message = this._pairs + " pairs: Press SPACE to play";
     }
     removePair(): void {
+        if (this._pairs <= 0) { return; }
         // Choose random card
-        console.log(this.deck);
         let available_key: string[] = [];
         for (const key in this._configuration) {
             if(this._configuration.hasOwnProperty(key)) {
@@ -97,6 +97,21 @@ export class Board {
             [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
         }
     }
+    start(): string {
+        // Un flip cards
+        for (let i = 0; i < this.deck.length; i++) {
+            if (this.deck[i].side == "back") {
+                this.deck[i].flip();
+            }
+            this.deck[i].matched = false;
+        }
+        // Reset configuration
+        this._revealed_cards = 0;
+        // Update message
+        this._message = this._pairs + " pairs: Press SPACE to play";
+        // Return game mode
+        return "start";
+    }
     play(): string {
         // Remove message
         this._message = "";
@@ -106,20 +121,33 @@ export class Board {
         }
         // Randomize cards   
         this._shuffle();
+        console.log(this._revealed_cards);
         // Return game mode
         return "play";
     }
-    start(): string {
-        // Un flip cards
+    win(): string {
+        // Remove message
+        this._message = "you finished! press SPACE to continue";
+        // Return game mode
+        return "win";
+    }
+    cheat(): void {
+        // Flip cards
         for (let i = 0; i < this.deck.length; i++) {
             if (this.deck[i].side == "back") {
                 this.deck[i].flip();
             }
         }
-        // Update message
-        this._message = this._pairs + " pairs: Press SPACE to play";
-        // Return game mode
-        return "start";
+        return;
+    }
+    uncheat(): void {
+        // Flip cards
+        for (let i = 0; i < this.deck.length; i++) {
+            if (this.deck[i].side == "front" && this.deck[i].revealed == false) {
+                this.deck[i].flip();
+            }
+        }
+        return;
     }
     mouseInCard(x: number, y: number): boolean {
         for (let i = 0; i < this.deck.length; i++) {
@@ -197,20 +225,52 @@ export class Board {
     }
     reveal_card(x: number, y: number): void {
         for (let i = 0; i < this.deck.length; i++) {
-            if (this.deck[i].mouseIn(x, y)) {
-                console.log(this.deck[i].element);
-                console.log(this._revealed_cards)
+            if (this.deck[i].mouseIn(x, y) && this.deck[i].matched == false) {
                 if (this.deck[i].side == "back" && this._revealed_cards < 2) {
                     this.deck[i].flip();
+                    this.deck[i].revealed = true;
                     this._revealed_cards++;
                     break;
                 } else if(this.deck[i].side == "front") {
                     this.deck[i].flip();
+                    this.deck[i].revealed = false;
                     this._revealed_cards--;
                     break;
                 }
             }
         }
     }
-    
+    checkMatch(): boolean {
+        let revealed_cards: Card[] = [];
+        for (let i = 0; i < this.deck.length; i++) {
+            if (this.deck[i].side == "front" && this.deck[i].matched == false) {
+                revealed_cards.push(this.deck[i]);
+            }
+        }
+        if (revealed_cards.length == 2) {  
+            console.log(revealed_cards[0].element, revealed_cards[1].element);
+            if (revealed_cards[0].element == revealed_cards[1].element && revealed_cards[0].picture.index == revealed_cards[1].picture.index) {
+                this._revealed_cards = 0;
+                let index1 = this.deck.indexOf(revealed_cards[0]);
+                let index2 = this.deck.indexOf(revealed_cards[1]);
+                this.deck[index1].matched = true;
+                this.deck[index2].matched = true;
+                return true;
+            }
+        }
+        return false;
+    }
+    checkWin(): boolean {
+        for (let i = 0; i < this.deck.length; i++) {
+            if (this.deck[i].side == "back") {
+                return false;
+            }
+        }
+        // Reset revealed cards
+        this._revealed_cards = 0;
+        for (let i = 0; i < this.deck.length; i++) {
+            this.deck[i].matched = false;
+        }
+        return true;
+    }
 }

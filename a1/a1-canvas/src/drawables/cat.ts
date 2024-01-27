@@ -28,13 +28,18 @@ export class Cat extends Picture {
 			}
 		]
 	}
-  	draw(gc: CanvasRenderingContext2D) {
+  	draw(gc: CanvasRenderingContext2D, light: boolean) {
 		const index = this.index;
 		const element = this.configuration[index];
 		gc.save();
 		gc.translate(this.x, this.y);
 		gc.scale(this.scale, this.scale);
 
+		if (light) {
+			gc.globalAlpha = 0.5;
+		} else {
+			gc.globalAlpha = 1;
+		}
 		gc.fillStyle = element.colors[0];
 		gc.strokeStyle = element.colors[1];
 		gc.lineWidth = 8;

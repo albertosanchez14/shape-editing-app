@@ -1,6 +1,4 @@
 // BullsEye Drawable
-import { random } from "simplekit/utility";
-import { Drawable } from "./drawable";
 import { Picture, PictureConfiguration } from "./picture";
 
 
@@ -50,7 +48,7 @@ export class BullsEye extends Picture {
         ];
     }
     
-    draw(gc: CanvasRenderingContext2D): void {
+    draw(gc: CanvasRenderingContext2D, light: boolean): void {
         const index = this.index;
         const element = this.configuration[index];
         
@@ -58,6 +56,11 @@ export class BullsEye extends Picture {
 		gc.translate(this.x, this.y);
 		gc.scale(this.scale, this.scale);
 
+        if (light) {
+			gc.globalAlpha = 0.5;
+		} else {
+			gc.globalAlpha = 1;
+		}
 		gc.fillStyle = this.configuration[index].colors[0];
 		gc.strokeStyle = this.configuration[index].stroke;
 		gc.lineWidth = 8;
