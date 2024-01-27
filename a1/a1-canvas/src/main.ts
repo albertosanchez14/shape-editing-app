@@ -42,7 +42,6 @@ function handleEvent(e: SKEvent) {
             gameMode = board.win();
           }
         }
-        console.log(board._revealed_cards);
       }
       break;
     case "keyup":
@@ -58,7 +57,6 @@ function handleEvent(e: SKEvent) {
       }
       break;
     case "keydown":
-      console.log("longpress");
       const { key: keydown } = e as SKKeyboardEvent;
       switch (keydown) {
         case "x":

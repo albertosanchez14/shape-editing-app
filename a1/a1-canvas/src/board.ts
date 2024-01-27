@@ -121,7 +121,6 @@ export class Board {
         }
         // Randomize cards   
         this._shuffle();
-        console.log(this._revealed_cards);
         // Return game mode
         return "play";
     }
@@ -248,7 +247,6 @@ export class Board {
             }
         }
         if (revealed_cards.length == 2) {  
-            console.log(revealed_cards[0].element, revealed_cards[1].element);
             if (revealed_cards[0].element == revealed_cards[1].element && revealed_cards[0].picture.index == revealed_cards[1].picture.index) {
                 this._revealed_cards = 0;
                 let index1 = this.deck.indexOf(revealed_cards[0]);
