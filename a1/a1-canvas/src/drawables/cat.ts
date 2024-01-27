@@ -92,4 +92,5 @@ export class Cat extends Picture {
 
 		gc.restore();
   	}
+
 }

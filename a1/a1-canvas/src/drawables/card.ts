@@ -13,9 +13,8 @@ export class Card implements Drawable{
     private _element: string;
     size: number = 80;
     picture: Picture;
-    
+    private _hover: boolean;
     constructor(side: string, element: string) {
-        // TODO: fails because it is initializes to 0,0
         this.x = 0;
         this.y = 0;
         this._side = side;
@@ -29,6 +28,7 @@ export class Card implements Drawable{
         } else {
             throw new Error("Invalid card element: " + element);
         }
+        this._hover = false;
     }
 
     get side() {
@@ -41,7 +41,6 @@ export class Card implements Drawable{
             throw new Error("Invalid card side: " + side);
         }
     }
-
     get element() {
         return this._element;
     }
@@ -59,11 +58,20 @@ export class Card implements Drawable{
             throw new Error("Invalid card element: " + element);
         }
     }
+    get hover() {
+        return this._hover;
+    }
+    set hover(hover: boolean) {
+        this._hover = hover;
+    }
 
     draw(gc: CanvasRenderingContext2D) {
         gc.save();
         gc.translate(this.x, this.y);
-        
+        if (this._hover) {
+            gc.fillStyle = "yellow";
+            gc.fillRect(-5, -5, this.size + 10, this.size + 10);
+        }
         gc.fillStyle = "white";
         gc.fillRect(0, 0, this.size, this.size);
         gc.strokeStyle = "black";
@@ -79,6 +87,7 @@ export class Card implements Drawable{
             gc.translate(this.x + 5, this.y + 5);
             gc.fillStyle = "lightblue";
             gc.fillRect(0, 0, this.size - 10, this.size - 10);
+
             gc.restore();
         }
     }
@@ -89,5 +98,9 @@ export class Card implements Drawable{
         } else {
             this.side = "front";
         }
+    }
+
+    mouseIn(x: number, y: number) {
+        return (x >= this.x - 1 && x <= this.x + this.size + 1 && y >= this.y - 1 && y <= this.y + this.size + 1);
     }
 }
