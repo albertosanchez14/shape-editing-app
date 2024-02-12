@@ -5,6 +5,7 @@ import { SKContainer,
 // Local imports
 import { Observer } from "./observer";
 import { Model } from "./model";
+import { SKColorbox } from "./colorBox";
 
 
 export class ShapeListView extends SKContainer implements Observer{
@@ -21,7 +22,7 @@ export class ShapeListView extends SKContainer implements Observer{
         this.id = "shapelist";
         this.fillWidth = 2/3;
         this.fillHeight = 1;
-        this.fill = "lightblue";
+        this.fill = "white";
         this.padding = 20;
         this.layoutMethod = Layout.makeWrapRowLayout({ gap: 20 });
 
@@ -39,16 +40,17 @@ export class ShapeListView extends SKContainer implements Observer{
     }
     private _fill_shapes(){
         for (let i = 0; i < this.model.colors_hl.length; i++) {
-            const shape = new SKContainer();
-            shape.width = 50;
+            const shape = new SKColorbox();
             shape.height = 50;
+            shape.width = 50;
             shape.border = "black";
             shape.fill = this.model.hue_to_color(this.model.colors_hl[i]);
             // Sele
             shape.addEventListener("action", () => {
                 this.model.selected = i;
+                this.model.colors_hl[i].selected = true;
             });
-
+            shape.checked = this.model.colors_hl[i].selected;
             this.addChild(shape);
         }
     }

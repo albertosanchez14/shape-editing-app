@@ -1,16 +1,19 @@
 import { Subject } from "./observer";
 
 
-type ColorSquare = { 
+interface ColorForm {
+	selected: boolean; 
 	hue: number; 
 	luminance: number; 
 	saturation: number;
+	radius?: number;
+	points?: number;
 }
 
 
 export class Model extends Subject {
 	// model data
-	private _colors_hl: ColorSquare[] = [];
+	private _colors_hl: ColorForm[] = [];
 	private _selected = 0;
 	
 	// model constructor
@@ -40,7 +43,8 @@ export class Model extends Subject {
 		const hue = Math.floor(Math.random() * 360);
 		const luminance = 50;
 		const saturation = 100;
-		this._colors_hl.push({ hue, luminance, saturation });
+		const selected = false;
+		this._colors_hl.push({ selected, hue, luminance, saturation });
 		this.notifyObservers();
 	}
 	delete_shape() {
@@ -53,7 +57,7 @@ export class Model extends Subject {
 	}
 
 
-	hue_to_color(element: ColorSquare) {
+	hue_to_color(element: ColorForm) {
 		return `hsl(${element.hue}, ${element.saturation}%, ${element.luminance}%)`;
 	}
 }

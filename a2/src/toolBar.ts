@@ -57,6 +57,7 @@ export class ToolBarView extends SKContainer implements Observer{
             this.model.delete_shape();
         });
         this.clearButton.addEventListener("action", () => {
+            console.log("clear");
             this.model.clear_shapes();
         });
 
