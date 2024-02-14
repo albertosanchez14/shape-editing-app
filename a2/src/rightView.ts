@@ -8,28 +8,19 @@ import {
 // local imports
 import { Observer } from "./observer";
 import { Model } from "./model";
+import { ColorForm } from "./model";
 import { makeFillColumnLayout } from "./fillColumn";
 
 
 export class RightView extends SKContainer implements Observer {
     //#region observer pattern
     update(): void {
-        // Case 1: > 1 color in the list
-        if (this.model.colors_hl.length > 0) {
-            // update the color display
-            this.color_display.fill = this.model.hue_to_color(this.model.colors_hl[this.model.selected]);
-            // update the textfields
-            this.textfields[0].text = this.model.colors_hl[this.model.selected].hue.toString();
-            if (this.model.colors_hl[this.model.selected].radius) {
-                this.textfields[1].text = this.model.colors_hl[this.model.selected].radius.toString();
-            }
-            if (this.model.colors_hl[this.model.selected].points) {
-                this.textfields[2].text = this.model.colors_hl[this.model.selected].points.toString();
-            }
-        } else {
-            // Case 2: 0 colors in the list
-            this._no_color_select();
-        }
+        // Case 1 : no color selected
+        this.model.selected === 0 ? this._no_color_select() : null;
+        // Case 2 : 1 color selected
+        this.model.selected === 1 ? this._color_select() : null;
+        // Case 3 : multiple colors selected
+        this.model.selected > 1 ? this._mult_color_select() : null;
 	}
     //#endregion
     
@@ -37,7 +28,7 @@ export class RightView extends SKContainer implements Observer {
     color_display_helper: SKContainer = new SKContainer();
     color_display: SKContainer = new SKContainer();
     color_form: SKContainer = new SKContainer();
-	// Fields for the color form: hue, radius and points
+	// Text fields for the color form: hue, radius and points
 	textfields: SKTextfield[] = [new SKTextfield(), new SKTextfield(), new SKTextfield()];
 
     constructor(private model: Model) {
@@ -57,28 +48,23 @@ export class RightView extends SKContainer implements Observer {
         this.color_selector.fill = "whitesmoke";
         this.color_selector.border = "1px lightgrey";
         this.color_selector.padding = 10;
-
-
         this.color_selector.layoutMethod = makeFillColumnLayout({ gap: 10 });
         this.addChild(this.color_selector);
 
-        // add the color display helper container to the view
+        // set the color display
         this.color_display.fillHeight = 2/3;
-        console.log(this.color_display.paddingBox);
         this.color_display.fillWidth = 1;
-		//this.color_display.layoutMethod = this.model.hue_to_color(this.model.colors_hl[this.model.selected]);
-        this.color_selector.addChild(this.color_display);
 
-        // add the color form to the view
+        // set the color properties form
         this.color_form.fillWidth = 1;
         this.color_form.fillHeight = 1/3;
         this.color_form.fill = "whitesmoke";
         this.color_form.border = "1px grey";
 		this.color_form.padding = 10;
 		this.color_form.layoutMethod = makeFillColumnLayout({ gap: 40 });
-        this.color_selector.addChild(this.color_form);
 
-		// add the labels and textfields to the form
+		// add the labels and textfields to the color properties form
+        // TODO: add radius and points only if it is a star
 		const labels = ["Hue", "Radius", "Points"];
 		for (let i = 0; i < 3; i++) {
 			const label = new SKLabel();
@@ -102,16 +88,54 @@ export class RightView extends SKContainer implements Observer {
 			this.color_form.addChild(help_cointainer2);
 		}
 
+        // start with no color selected
+        this._no_color_select();
+
         // register with the model when we're ready
         this.model.addObserver(this);
     }
 
     private _no_color_select(){
+        // clear the color selector
+        this.color_selector.clearChildren();
+        this.color_selector.layoutMethod = Layout.makeCentredLayout();
+        // add the 'Select One' label to the color selector
         const label = new SKLabel();
         label.text = "Select One";
         label.align = "centre";
+        this.color_selector.addChild(label);
+    }
+
+    private _color_select(){
+        // clear the color selector
+        this.color_selector.clearChildren();
+        this.color_selector.layoutMethod = makeFillColumnLayout({ gap: 10 });
+        // add the color display to the color selector
+        const color_selected: ColorForm | undefined = this.model.colors_hl.find((color) => color.selected === true);
+        if (!color_selected) { return; }
+        this.color_display.fill = this.model.hue_to_color(color_selected);
+        this.color_selector.addChild(this.color_display);
+        // add the color form to the color selector
+        // update the textfields
+        // TODO: update radius and points only if it is a star
+        this.textfields[0].text = color_selected.hue.toString();
+        if (this.model.colors_hl[this.model.selected].radius) {
+            this.textfields[1].text = color_selected.radius.toString();
+        }
+        if (this.model.colors_hl[this.model.selected].points) {
+            this.textfields[2].text = color_selected.points.toString();
+        }
+        this.color_selector.addChild(this.color_form);
+    }
+
+    private _mult_color_select(){
+        // clear the color selector
         this.color_selector.clearChildren();
         this.color_selector.layoutMethod = Layout.makeCentredLayout();
+        // add the 'Too Many Selected' label to the color selector
+        const label = new SKLabel();
+        label.text = "Too Many Selected";
+        label.align = "centre";
         this.color_selector.addChild(label);
     }
 }

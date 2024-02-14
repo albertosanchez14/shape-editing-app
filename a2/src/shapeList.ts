@@ -1,11 +1,15 @@
-import { SKContainer, 
-    SKButton,
+import { SKElement,
+    SKContainer, 
+    SKMouseEvent,
+    SKKeyboardEvent,
+    requestKeyboardFocus,
     Layout } from "simplekit/imperative-mode";
 
 // Local imports
 import { Observer } from "./observer";
 import { Model } from "./model";
 import { SKColorbox } from "./colorBox";
+import { SKStar } from "./star";
 
 
 export class ShapeListView extends SKContainer implements Observer{
@@ -26,6 +30,12 @@ export class ShapeListView extends SKContainer implements Observer{
         this.padding = 20;
         this.layoutMethod = Layout.makeWrapRowLayout({ gap: 20 });
 
+        // TODO: Clicking on the white background of the shape list area, 
+        // and outside of any square in the list, deselects all squares.
+        this.addEventListener("action", () => {
+            console.log("Action event received");
+        });
+
         // Add shapes
         this._fill_shapes();
        
@@ -40,18 +50,71 @@ export class ShapeListView extends SKContainer implements Observer{
     }
     private _fill_shapes(){
         for (let i = 0; i < this.model.colors_hl.length; i++) {
-            const shape = new SKColorbox();
-            shape.height = 50;
-            shape.width = 50;
-            shape.border = "black";
-            shape.fill = this.model.hue_to_color(this.model.colors_hl[i]);
-            // Sele
-            shape.addEventListener("action", () => {
-                this.model.selected = i;
-                this.model.colors_hl[i].selected = true;
+            let shape: SKContainer | SKColorbox
+            if (this.model.colors_hl[i].radius != undefined) {
+                shape = this._create_star(i)
+            } else {
+                shape = this._create_colorbox(i);
+            }
+            // Select a shape
+            shape.addEventListener("color_clicked", () => {
+                this.model.select_color(shape.id);
             });
             shape.checked = this.model.colors_hl[i].selected;
             this.addChild(shape);
+            console.log("Shape added");
+            console.log(this.children);
         }
+    }
+    private _create_colorbox(i: number): SKColorbox{
+        const colorbox = new SKColorbox();
+        colorbox.id = `colorbox_${i}`;
+        colorbox.height = 50;
+        colorbox.width = 50;
+        colorbox.border = "black";
+        colorbox.fill = this.model.hue_to_color(this.model.colors_hl[i]);
+        return colorbox;
+    }
+    private _create_star(i: number): SKContainer{
+        const star = new SKStar();
+        star.id = `star_${i}`;
+        star.height = 50;
+        star.width = 50;
+        star.fill = this.model.hue_to_color(this.model.colors_hl[i]);
+        star.outer_rad = this.model.colors_hl[i].radius as number;
+        star.points = this.model.colors_hl[i].points as number;
+        const container = new SKContainer();
+        container.width = 50;
+        container.height = 50;
+        container.addChild(star);
+        return container;
+    }
+
+    handleMouseEvent(me: SKMouseEvent): boolean {
+        switch (me.type) {
+            case "mouseenter":
+                console.log("Mouse entered the shape list");
+                requestKeyboardFocus(this);
+            break;
+        }
+        return false;
+    }
+    
+    handleKeyboardEvent(ke: SKKeyboardEvent): boolean {
+        switch (ke.type) {
+            case "keydown":
+                if (ke.key === "Shift") {
+                    console.log("Shift key pressed");
+                    this.model.multiSelect = true;
+                }
+            break;
+            case "keyup":
+                if (ke.key === "Shift") {
+                    console.log("Shift key released");
+                    this.model.multiSelect = false;
+                }
+            break;
+        }    
+        return false;
     }
 }

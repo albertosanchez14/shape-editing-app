@@ -7,16 +7,21 @@ import {
   Style,
   requestKeyboardFocus,
 } from "simplekit/imperative-mode";
+import { point } from "simplekit/utility";
 
-export type SKColorboxProps = SKElementProps & { checked?: boolean };
+type SKStarProps = SKElementProps & { checked?: boolean,
+  inner_rad?: number
+  outer_rad?: number
+  points?: number}; 
 
-export class SKColorbox extends SKElement {
+export class SKStar extends SKElement {
   constructor({
     checked = false,
-    ...elementProps
-  }: SKColorboxProps = {}) {
+    inner_rad = 15, 
+    ...elementProps }: SKStarProps = {}) {
     super(elementProps);
     this.checked = checked;
+    this.inner_rad = inner_rad;
     this.height = Style.minElementSize - 10;
     this.width = Style.minElementSize - 10;
     this.calculateBasis();
@@ -24,11 +29,16 @@ export class SKColorbox extends SKElement {
   }
 
   state: "idle" | "hover" | "down" = "idle";
-
   checked: boolean;
-
   multiSelect: boolean = false;
-  
+
+  // inner radius of the star
+  inner_rad: number;
+  // outer radius of the star
+  outer_rad: number = 0;
+  // number of points on the star
+  points: number = 0;
+
   handleMouseEvent(me: SKMouseEvent) {
     switch (me.type) {
       case "mousedown":
@@ -59,8 +69,6 @@ export class SKColorbox extends SKElement {
   }
 
   draw(gc: CanvasRenderingContext2D) {
-    // to save typing "this" so much
-
     gc.save();
 
     const w = this.paddingBox.width;
@@ -86,6 +94,11 @@ export class SKColorbox extends SKElement {
       gc.stroke();
     }
 
+    let rotation = Math.PI/2*3;
+    let x = 0;
+    let y = 0;
+    let step = Math.PI/this.points;
+
     // normal background
     gc.beginPath();
     gc.rect(this.x, this.y, w, h);
@@ -95,6 +108,27 @@ export class SKColorbox extends SKElement {
     gc.fill();
     gc.stroke();
 
+    gc.beginPath();
+    gc.fillStyle = this.fill;
+    gc.strokeStyle = "black";
+    gc.lineWidth = 2;
+    gc.moveTo(0, -this.outer_rad)
+    for(let i = 0; i < this.points; i++){
+        x = Math.cos(rotation)*this.outer_rad;
+        y = Math.sin(rotation)*this.outer_rad;
+        gc.lineTo(x,y)
+        rotation += step
+
+        x = Math.cos(rotation)*this.inner_rad;
+        y = Math.sin(rotation)*this.inner_rad;
+        gc.lineTo(x, y)
+        rotation += step
+    }
+    gc.lineTo(0, -this.outer_rad);
+    gc.closePath();
+    gc.stroke();
+    gc.fill();
+
     gc.restore();
 
     // element draws debug viz if flag is set
@@ -102,6 +136,6 @@ export class SKColorbox extends SKElement {
   }
 
   public toString(): string {
-    return `SKColorbox`;
+    return `SKStar `;
   }
 }

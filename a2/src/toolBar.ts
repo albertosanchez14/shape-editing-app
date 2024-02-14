@@ -1,23 +1,26 @@
-import { SKContainer, 
-    SKButton,
+import { SKContainer,
     Layout } from "simplekit/imperative-mode";
 
 // Local imports
 import { Observer } from "./observer";
 import { Model } from "./model";
+import { SKButtonCustom } from "./button";
 
 
 export class ToolBarView extends SKContainer implements Observer{
     //#region observer pattern
     update(): void {
-
+        this.addButton.enabled = this.model.colors_hl.length < 20;
+        this.addStarButton.enabled = this.model.colors_hl.length < 20;
+        this.deleteButton.enabled = this.model.selected !== 0;
+        this.clearButton.enabled = this.model.colors_hl.length > 0;
     }
     //#endregion
     
-    addButton: SKButton = new SKButton();
-    addStarButton: SKButton = new SKButton();
-    deleteButton: SKButton = new SKButton();
-    clearButton: SKButton = new SKButton();
+    addButton: SKButtonCustom = new SKButtonCustom();
+    addStarButton: SKButtonCustom = new SKButtonCustom();
+    deleteButton: SKButtonCustom = new SKButtonCustom();
+    clearButton: SKButtonCustom = new SKButtonCustom();
     
     constructor(private model: Model) {
         super();
@@ -52,12 +55,13 @@ export class ToolBarView extends SKContainer implements Observer{
         this.addButton.addEventListener("action", () => {
             this.model.add_shape();
         });
-
+        this.addStarButton.addEventListener("action", () => {
+            this.model.add_star();
+        });
         this.deleteButton.addEventListener("action", () => {
             this.model.delete_shape();
         });
         this.clearButton.addEventListener("action", () => {
-            console.log("clear");
             this.model.clear_shapes();
         });
 
