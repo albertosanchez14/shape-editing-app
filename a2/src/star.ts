@@ -59,11 +59,19 @@ type SKStarProps = SKElementProps & {
         break;
       case "mouseenter":
         this.state = "hover";
-        return true;
+        return this.sendEvent({
+          source: this,
+          timeStamp: me.timeStamp,
+          type: "mouseenter",
+        } as SKEvent);
         break;
       case "mouseexit":
         this.state = "idle";
-        return true;
+        return this.sendEvent({
+          source: this,
+          timeStamp: me.timeStamp,
+          type: "mouseexit",
+        } as SKEvent);
         break;
     }
     return false;
