@@ -7,14 +7,16 @@ import {
   Style,
   requestKeyboardFocus,
 } from "simplekit/imperative-mode";
-import { point } from "simplekit/utility";
 
-type SKStarProps = SKElementProps & { checked?: boolean,
+
+type SKStarProps = SKElementProps & { 
+  checked?: boolean,
   inner_rad?: number
   outer_rad?: number
   points?: number}; 
 
-export class SKStar extends SKElement {
+
+  export class SKStar extends SKElement {
   constructor({
     checked = false,
     inner_rad = 15, 
@@ -31,6 +33,7 @@ export class SKStar extends SKElement {
   state: "idle" | "hover" | "down" = "idle";
   checked: boolean;
   multiSelect: boolean = false;
+  scale: number = 0.5;
 
   // inner radius of the star
   inner_rad: number;
@@ -102,11 +105,14 @@ export class SKStar extends SKElement {
     // normal background
     gc.beginPath();
     gc.rect(this.x, this.y, w, h);
-    gc.strokeStyle = "black";
-    gc.lineWidth = 2;
-    gc.fillStyle = this.fill;
+    gc.strokeStyle = "grey";
+    gc.lineWidth = 1;
+    gc.fillStyle = "white";
     gc.fill();
     gc.stroke();
+
+	  gc.translate(this.x + w/2, this.y + h/2);
+	  gc.scale(this.scale, this.scale);
 
     gc.beginPath();
     gc.fillStyle = this.fill;

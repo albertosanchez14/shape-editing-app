@@ -75,7 +75,6 @@ export class Model extends Subject {
 		this.notifyObservers();
 	}
 	select_color(id: string) {
-		if (!id.startsWith("shape_")) { return; }
 		const index = parseInt(id.split("_")[1]);
 		this._selected = this._colors_hl.length;
 		this._colors_hl.forEach((color, i) => {
@@ -90,6 +89,42 @@ export class Model extends Subject {
 			// count the number of selected shapes
 			if (!color.selected) { this._selected--; }
 		});
+		this.notifyObservers();
+	}
+	unselect_all() {
+		this._colors_hl.forEach((color) => {
+			color.selected = false;
+		});
+		this._selected = 0;
+		this.notifyObservers();
+	}
+	change_shape(index: number, value: string) {
+		let pos = 0;
+		this._colors_hl.forEach((color, i) => {
+			if (color.selected) { pos = i; }
+		});
+		if (!isNaN(Number(value))) {
+			// Hue
+			if (index === 0) {
+				if (Number(value) <= 360 && Number(value) >= 0) {
+					this._colors_hl[pos].hue = Number(value); 
+				} 
+			}
+			if (index === 1) {
+				if (Number(value) <= 45 && Number(value) >= 20) {
+					this._colors_hl[pos].radius = Number(value); 
+				} else if (Number(value) < 20) {
+					this._colors_hl[pos].radius = Number(value);
+				}
+			}
+			if (index === 2) { 
+				if (Number(value) <= 10 && Number(value) >= 3) {
+					this._colors_hl[pos].points = Number(value); 
+				} else if (Number(value) < 3) {
+					this._colors_hl[pos].points = Number(value);
+				}
+			}
+		}
 		this.notifyObservers();
 	}
 

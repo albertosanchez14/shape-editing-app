@@ -90,7 +90,7 @@ export class SKColorbox extends SKElement {
     gc.beginPath();
     gc.rect(this.x, this.y, w, h);
     gc.strokeStyle = "black";
-    gc.lineWidth = 2;
+    gc.lineWidth = 1;
     gc.fillStyle = this.fill;
     gc.fill();
     gc.stroke();

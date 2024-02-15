@@ -34,6 +34,7 @@ export class ShapeListView extends SKContainer implements Observer{
         // and outside of any square in the list, deselects all squares.
         this.addEventListener("action", () => {
             console.log("Action event received");
+            this.model.unselect_all();
         });
 
         // Add shapes
@@ -50,9 +51,10 @@ export class ShapeListView extends SKContainer implements Observer{
     }
     private _fill_shapes(){
         for (let i = 0; i < this.model.colors_hl.length; i++) {
-            let shape: SKContainer | SKColorbox
+            let shape: SKColorbox
             if (this.model.colors_hl[i].radius != undefined) {
-                shape = this._create_star(i)
+                const container = this._create_star(i)
+                shape = container.children[0] as SKStar;
             } else {
                 shape = this._create_colorbox(i);
             }
@@ -62,8 +64,6 @@ export class ShapeListView extends SKContainer implements Observer{
             });
             shape.checked = this.model.colors_hl[i].selected;
             this.addChild(shape);
-            console.log("Shape added");
-            console.log(this.children);
         }
     }
     private _create_colorbox(i: number): SKColorbox{
@@ -93,8 +93,10 @@ export class ShapeListView extends SKContainer implements Observer{
     handleMouseEvent(me: SKMouseEvent): boolean {
         switch (me.type) {
             case "mouseenter":
-                console.log("Mouse entered the shape list");
                 requestKeyboardFocus(this);
+            break;
+            case "click":
+                this.model.unselect_all();
             break;
         }
         return false;
@@ -104,13 +106,11 @@ export class ShapeListView extends SKContainer implements Observer{
         switch (ke.type) {
             case "keydown":
                 if (ke.key === "Shift") {
-                    console.log("Shift key pressed");
                     this.model.multiSelect = true;
                 }
             break;
             case "keyup":
                 if (ke.key === "Shift") {
-                    console.log("Shift key released");
                     this.model.multiSelect = false;
                 }
             break;
