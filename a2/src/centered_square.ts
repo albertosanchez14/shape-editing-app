@@ -1,6 +1,5 @@
 import { SKElement } from "simplekit/imperative-mode";
 import { LayoutMethod, Size } from "simplekit/imperative-mode";
-import { Settings } from "simplekit/imperative-mode";
 
 export function makeSquareCentredLayout(): LayoutMethod {
   return (

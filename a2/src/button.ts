@@ -1,4 +1,4 @@
-import { insideHitTestRectangle, measureText } from "simplekit/utility";
+import { measureText } from "simplekit/utility";
 import { SKElement, 
   SKElementProps,
   Style, 

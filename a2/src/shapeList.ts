@@ -1,5 +1,4 @@
-import { SKElement,
-    SKContainer, 
+import { SKContainer, 
     SKMouseEvent,
     SKKeyboardEvent,
     requestKeyboardFocus,
@@ -30,10 +29,8 @@ export class ShapeListView extends SKContainer implements Observer{
         this.padding = 20;
         this.layoutMethod = Layout.makeWrapRowLayout({ gap: 20 });
 
-        // TODO: Clicking on the white background of the shape list area, 
-        // and outside of any square in the list, deselects all squares.
-        this.addEventListener("action", () => {
-            console.log("Action event received");
+        this.addEventListener("unselect_all", () => {
+            console.log("action");
             this.model.unselect_all();
         });
 
@@ -58,9 +55,14 @@ export class ShapeListView extends SKContainer implements Observer{
             } else {
                 shape = this._create_colorbox(i);
             }
-            // Select a shape
             shape.addEventListener("color_clicked", () => {
                 this.model.select_color(shape.id);
+            });
+            shape.addEventListener("mouseenter", () => {
+                this.model.un_all = false;        
+            });
+            shape.addEventListener("mouseexit", () => {
+                this.model.un_all = true;
             });
             shape.checked = this.model.colors_hl[i].selected;
             this.addChild(shape);
@@ -96,7 +98,11 @@ export class ShapeListView extends SKContainer implements Observer{
                 requestKeyboardFocus(this);
             break;
             case "click":
-                this.model.unselect_all();
+                return this.sendEvent({
+                    source: this,
+                    timeStamp: me.timeStamp,
+                    type: "unselect_all",
+                });
             break;
         }
         return false;

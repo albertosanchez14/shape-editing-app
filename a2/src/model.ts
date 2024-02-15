@@ -16,6 +16,7 @@ export class Model extends Subject {
 	private _colors_hl: ColorForm[] = [];
 	private _selected = 0;
 	private _multiSelect = false;
+	private _un_all = false;
 	
 	// model constructor
 	constructor() {
@@ -29,16 +30,20 @@ export class Model extends Subject {
 	get selected() {
 		return this._selected;
 	}
-
 	get colors_hl() {
 		return this._colors_hl;
 	}
-	
 	get multiSelect() {
 		return this._multiSelect;
 	}
 	set multiSelect(m: boolean) {
 		this._multiSelect = m;
+	}
+	get un_all() {
+		return this._un_all;
+	}
+	set un_all(u: boolean) {
+		this._un_all = u;
 	}
 
 	// model "business logic"
@@ -92,6 +97,7 @@ export class Model extends Subject {
 		this.notifyObservers();
 	}
 	unselect_all() {
+		if (!this._un_all) { return; }
 		this._colors_hl.forEach((color) => {
 			color.selected = false;
 		});

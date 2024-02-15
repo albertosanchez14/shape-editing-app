@@ -2,10 +2,8 @@ import {
   SKElement,
   SKElementProps,
   SKEvent,
-  SKKeyboardEvent,
   SKMouseEvent,
   Style,
-  requestKeyboardFocus,
 } from "simplekit/imperative-mode";
 
 

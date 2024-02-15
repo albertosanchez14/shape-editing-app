@@ -2,10 +2,8 @@ import {
   SKElement,
   SKElementProps,
   SKEvent,
-  SKKeyboardEvent,
   SKMouseEvent,
   Style,
-  requestKeyboardFocus,
 } from "simplekit/imperative-mode";
 
 export type SKColorboxProps = SKElementProps & { checked?: boolean };
@@ -48,11 +46,19 @@ export class SKColorbox extends SKElement {
         break;
       case "mouseenter":
         this.state = "hover";
-        return true;
+        return this.sendEvent({
+          source: this,
+          timeStamp: me.timeStamp,
+          type: "mouseenter",
+        } as SKEvent);
         break;
       case "mouseexit":
         this.state = "idle";
-        return true;
+        return this.sendEvent({
+          source: this,
+          timeStamp: me.timeStamp,
+          type: "mouseexit",
+        } as SKEvent);
         break;
     }
     return false;

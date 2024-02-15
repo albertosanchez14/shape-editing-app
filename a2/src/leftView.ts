@@ -1,7 +1,5 @@
 import {
-    SKButton,
     SKContainer,
-    Layout,
 } from "simplekit/imperative-mode";
 import { makeFillColumnLayout } from "./fillColumn";
 
