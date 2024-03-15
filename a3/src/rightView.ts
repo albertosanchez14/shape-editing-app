@@ -145,7 +145,7 @@ export class RightView implements View {
         this.look.options.add(new Option("Left", "left"));
         this.look.options.add(new Option("Centre", "centre"));
         this.look.options.add(new Option("Right", "right"));
-        this.look.addEventListener("input", () => {
+        this.look.addEventListener("change", () => {
             this.model.change_shape(5, this.look.value);
         });
         this.label[5].innerText = "Look";

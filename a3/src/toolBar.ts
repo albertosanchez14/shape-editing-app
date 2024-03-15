@@ -7,10 +7,10 @@ import "./toolBar.css";
 export class ToolBarView implements View {
     //#region observer pattern
     update(): void {
-        // this.addButton.enabled = this.model.colors_hl.length < 20;
-        // this.addStarButton.enabled = this.model.colors_hl.length < 20;
-        // this.deleteButton.enabled = this.model.selected !== 0;
-        // this.clearButton.enabled = this.model.colors_hl.length > 0;
+        this.addButton.disabled = this.model.colors_hl.length >= 25;
+        this.options.disabled = this.model.colors_hl.length >= 25;
+        this.deleteButton.disabled = this.model.selected === 0;
+        this.clearButton.disabled = this.model.colors_hl.length === 0;
     }
     //#endregion
 
