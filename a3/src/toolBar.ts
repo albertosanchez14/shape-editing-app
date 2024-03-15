@@ -21,7 +21,8 @@ export class ToolBarView implements View {
     }
 
     private addButton: HTMLButtonElement;
-    private addStarButton: HTMLButtonElement;
+    private options: HTMLSelectElement;
+    private _forms: string[] = ["Square", "Star", "Bullseye", "Cat"];
     private deleteButton: HTMLButtonElement;
     private clearButton: HTMLButtonElement;
     
@@ -31,26 +32,27 @@ export class ToolBarView implements View {
 
         // Add button of the toolbar
         this.addButton = document.createElement("button");
-        this.addButton.id = "button";
+        this.addButton.className = "button";
+        this.addButton.id = "add-button";
         this.addButton.innerText = "Add";
         this.addButton.addEventListener("click", () => {
-            console.log("action");
-            this.model.add_shape();
+            this.model.add_shape(this.options.value);
         });
         this.container.appendChild(this.addButton);
 
-        // Add-Star button of the toolbar
-        this.addStarButton = document.createElement("button");
-        this.addStarButton.id = "button";
-        this.addStarButton.innerText = "Add Star";
-        this.addStarButton.addEventListener("click", () => {
-            this.model.add_star();
+        // Dropdown menu of the toolbar
+        this.options = document.createElement("select");
+        this.options.className = "button";
+        this.options.id = "options"
+        this._forms.forEach((form) => {
+            this.options.options.add(new Option(form, form.toLowerCase()));
         });
-        this.container.appendChild(this.addStarButton);
+        this.container.appendChild(this.options);
 
         // Delete button of the toolbar
         this.deleteButton = document.createElement("button");
-        this.deleteButton.id = "button";
+        this.deleteButton.className = "button";
+        this.deleteButton.id = "delete-button";
         this.deleteButton.innerText = "Delete";
         this.deleteButton.addEventListener("click", () => {
             this.model.delete_shape();
@@ -59,7 +61,8 @@ export class ToolBarView implements View {
 
         // Clear button of the toolbar
         this.clearButton = document.createElement("button");
-        this.clearButton.id = "button";
+        this.clearButton.className = "button";
+        this.clearButton.id = "clear-button";
         this.clearButton.innerText = "Clear";
         this.clearButton.addEventListener("click", () => {
             this.model.clear_shapes();

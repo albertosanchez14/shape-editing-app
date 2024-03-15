@@ -6,8 +6,12 @@ export interface ColorForm {
 	hue: number; 
 	luminance: number; 
 	saturation: number;
+	type: string;
 	radius?: number;
 	points?: number;
+	hue2?: number;
+	rings?: number;
+	look?: "left" | "centre" | "right";
 }
 
 
@@ -24,7 +28,7 @@ export class Model extends Subject {
 
 		// Add 8 initial shapes
 		for (let i = 0; i < 8; i++) {
-			this.add_shape();
+			this.add_shape("square");
 		}
 	}
 	get selected() {
@@ -47,24 +51,32 @@ export class Model extends Subject {
 	}
 
 	// model "business logic"
-	add_shape() {
-		if (this._colors_hl.length >= 20) { return; }
+	add_shape(form: string) {
+		if (this._colors_hl.length >= 25) { return; }
 		const hue = Math.floor(Math.random() * 360);
 		const luminance = 50;
 		const saturation = 100;
 		const selected = false;
-		this._colors_hl.push({ selected, hue, luminance, saturation });
-		this.notifyObservers();
-	}
-	add_star() {
-		if (this._colors_hl.length >= 20) { return; }
-		const hue = Math.floor(Math.random() * 360);
-		const luminance = 50;
-		const saturation = 100;
-		const selected = false;
-		const radius = Math.floor(Math.random() * (45 - 20) + 20);
-		const points = Math.floor(Math.random() * (10 - 3) + 3);
-		this._colors_hl.push({ selected, hue, luminance, saturation, radius, points });
+		this._colors_hl.push({ selected, hue, luminance, saturation, type: form});	
+		if (form === "star") {
+			// Choose random radius and points
+			const radius = Math.floor(Math.random() * (45 - 20) + 20);
+			const points = Math.floor(Math.random() * (10 - 3) + 3);
+			this._colors_hl[this._colors_hl.length - 1].radius = radius;
+			this._colors_hl[this._colors_hl.length - 1].points = points;
+		} else if (form === "bullseye") {
+			// Choose random radius, hue2, and rings
+			const radius = 45;
+			const hue2 = Math.floor(Math.random() * 360);
+			const rings = Math.floor(Math.random() * (5 - 2) + 2);
+			this.colors_hl[this.colors_hl.length - 1].radius = radius;
+			this.colors_hl[this.colors_hl.length - 1].hue2 = hue2;
+			this.colors_hl[this.colors_hl.length - 1].rings = rings;
+		} else if (form === "cat") {
+			// Choose random look
+			const look = Math.random() < 0.33 ? "left" : Math.random() < 0.66 ? "centre" : "right";
+			this.colors_hl[this.colors_hl.length - 1].look = look;
+		}
 		this.notifyObservers();
 	}
 	delete_shape() {
@@ -94,7 +106,6 @@ export class Model extends Subject {
 			// count the number of selected shapes
 			if (!color.selected) { this._selected--; }
 		});
-		console.log(this._colors_hl);
 		this.notifyObservers();
 	}
 	unselect_all() {
@@ -113,22 +124,28 @@ export class Model extends Subject {
 		if (!isNaN(Number(value))) {
 			// Hue
 			if (index === 0) {
-				if (Number(value) <= 360 && Number(value) >= 0) {
-					this._colors_hl[pos].hue = Number(value); 
-				} 
+				this._colors_hl[pos].hue = Number(value);
 			}
+			// Radius
 			if (index === 1) {
-				if (Number(value) <= 45 && Number(value) >= 20) {
-					this._colors_hl[pos].radius = Number(value); 
-				} else if (Number(value) < 20) {
-					this._colors_hl[pos].radius = Number(value);
-				}
+				this._colors_hl[pos].radius = Number(value);
 			}
-			if (index === 2) { 
-				if (Number(value) <= 10 && Number(value) >= 3) {
-					this._colors_hl[pos].points = Number(value); 
-				} else if (Number(value) < 3) {
-					this._colors_hl[pos].points = Number(value);
+			// Points
+			if (index === 2) {
+				this._colors_hl[pos].points = Number(value);
+			}
+			// Hue2
+			if (index === 3) {
+				this._colors_hl[pos].hue2 = Number(value);
+			}
+			// Rings
+			if (index === 4) {
+				this._colors_hl[pos].rings = Number(value);
+			}
+			// Look
+			if (index === 5) {
+				if (value === "left" || value === "centre" || value === "right") { 
+					this._colors_hl[pos].look = value;
 				}
 			}
 		}
@@ -138,4 +155,19 @@ export class Model extends Subject {
 	hue_to_color(element: ColorForm) {
 		return `hsl(${element.hue}, ${element.saturation}%, ${element.luminance}%)`;
 	}
+}
+
+
+/*
+ * Validator class
+ */
+export class Validator {
+    constructor(private min: number, private max: number) { }  
+
+    validate(value: number): boolean {
+        this.isValid = value >= this.min && value <= this.max;
+        return this.isValid;
+    }
+
+    isValid = true;
 }

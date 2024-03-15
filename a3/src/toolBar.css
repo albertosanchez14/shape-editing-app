@@ -7,7 +7,7 @@ div#toolbar {
     gap: 10px;
 }
 
-div#toolbar > #button {
+div#toolbar > .button {
     width: 80px;
 }
 
