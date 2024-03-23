@@ -36,11 +36,11 @@ export type CatProps = {
 
 export type ShapeType = "square" | "star" | "bullseye" | "cat";
 
-// export const shapes = computed<Shape[]>(() => {
-//   return [...Array(8)].map(() => createRandomShape("square"));
-// });
-
 export const shapes = signal<Shape[]>([]);
+export const selectedShapes = computed(() => {
+  return shapes.value.filter((shape) => shape.selected).length;
+});
+export const multiSelect = signal(false);
 
 export const init = () => {
   shapes.value = [...Array(8)].map(() => createRandomShape("square"));
@@ -99,15 +99,29 @@ function createRandomShape(type: ShapeType): Shape {
 }
 
 export const addShape = (type: ShapeType) => {
+  if (shapes.value.length >= 25) return;     
   shapes.value = [...shapes.value, createRandomShape(type)];
-  console.log(shapes.value);
 };
 
 export const selectShape = (id: number) => {
-  shapes.value.map((shape) => {
-    if (shape.id === id) {
-      shape.selected = !shape.selected;
-    }
-  });
-  console.log(shapes.value);
+  const shape = shapes.value.find((shape) => shape.id === id);
+  if (!shape) return;
+  if (!multiSelect.value) {
+    shapes.value = shapes.value.map((s) => ({
+      ...s,
+      selected: s.id === id,
+    }));
+  } else {
+    shapes.value = shapes.value.map((s) =>
+      s.id === id ? { ...s, selected: !s.selected } : s
+    );
+  }
+};
+
+export const removeShape = () => {
+  shapes.value = shapes.value.filter((shape) => !shape.selected);
+};
+
+export const clearShapes = () => {
+  shapes.value = [];
 };

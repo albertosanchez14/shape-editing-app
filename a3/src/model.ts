@@ -105,7 +105,7 @@ export class Model extends Subject {
 			}
 			// count the number of selected shapes
 			if (!color.selected) { this._selected--; }
-		});
+		});	
 		this.notifyObservers();
 	}
 	unselect_all() {

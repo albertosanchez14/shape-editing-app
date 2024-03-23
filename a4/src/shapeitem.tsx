@@ -23,6 +23,8 @@ export default function ShapeItem({ shape }: ShapeProp) {
 }
 
 // Sub-components
+// TODO: Implement the Square, Star, Bullseye, and Cat components
+// in other modules to reuse them in other parts of the application
 function Square({ shape }: ShapeProp) {
   return (
     <div
@@ -115,13 +117,15 @@ function Cat({ shape }: ShapeProp) {
     if (canvasRef.current != null) {
       canvasRef.current.width = 100;
       canvasRef.current.height = 100;
-      const gc = canvasRef.current.getContext('2d');
-      if (gc === null) { throw new Error("2d context not supported"); }
+      const gc = canvasRef.current.getContext("2d");
+      if (gc === null) {
+        throw new Error("2d context not supported");
+      }
       gc.fillStyle = `hsl(${prop.hue}, 50%, 50%)`;
       gc.strokeStyle = "black";
       gc.lineWidth = 2;
       gc.save();
-      gc.translate(canvasRef.current.width/2, canvasRef.current.height/2);
+      gc.translate(canvasRef.current.width / 2, canvasRef.current.height / 2);
       // head white outline
       gc.beginPath();
       gc.arc(0, 0, 40, 0, 2 * Math.PI);
@@ -162,11 +166,11 @@ function Cat({ shape }: ShapeProp) {
       gc.fillStyle = "black";
       let x: number;
       if (prop.look === "left") {
-          x = -3;
+        x = -3;
       } else if (prop.look === "centre") {
-          x = 0;
+        x = 0;
       } else {
-          x = 3;
+        x = 3;
       }
       gc.beginPath();
       // left
@@ -182,5 +186,5 @@ function Cat({ shape }: ShapeProp) {
       canvasRef.current.style.display = "block";
     }
   }, []);
-  return <canvas ref={canvasRef}/>;
+  return <canvas ref={canvasRef} />;
 }
