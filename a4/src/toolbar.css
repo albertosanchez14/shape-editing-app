@@ -1,0 +1,16 @@
+div#tool-bar {
+    display: flex;
+    align-items: center;
+    background-color: lightgray;
+    height: 50px;
+    padding-left: 10px;
+    gap: 10px;
+}
+
+div#tool-bar > .button {
+    width: 80px;
+}
+
+/* div#tool-bar > .button:hover {
+    background-color: lightblue;
+}    */
