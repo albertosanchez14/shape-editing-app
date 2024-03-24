@@ -1,8 +1,13 @@
-import * as State from "./state";
 import { useRef, useEffect } from "preact/hooks";
+
+// Props
 import { SquareProps, StarProps, BullseyeProps, CatProps } from "./state";
 
+// Styles
 import "./shapeitem.css";
+
+// State
+import * as State from "./state";
 
 type ShapeProp = { shape: State.Shape };
 

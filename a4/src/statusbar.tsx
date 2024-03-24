@@ -1,7 +1,11 @@
+// Styles
 import "./statusbar.css";
 
+// State
 import * as State from "./state";
 
+
+// Component
 export default function StatusBarView() {
   return (
     <div id="status-bar">

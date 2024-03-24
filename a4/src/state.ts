@@ -125,3 +125,8 @@ export const removeShape = () => {
 export const clearShapes = () => {
   shapes.value = [];
 };
+
+export const unSelectAll = (unAll: boolean) => {
+  if (!unAll) return;
+  shapes.value = shapes.value.map((s) => ({ ...s, selected: false }));
+}

@@ -1,10 +1,13 @@
 import { useRef } from "preact/hooks";
 
+// Styles
 import "./toolbar.css";
 
+// State
 import * as State from "./state";
 
 
+// Component
 export default function ToolBarView() {
   const selectRef = useRef<HTMLSelectElement>(null);
 
