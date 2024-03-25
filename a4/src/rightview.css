@@ -8,6 +8,17 @@ div#editor {
   flex-direction: column;
 }
 
+div#no-shape,
+div#mult-shapes {
+  flex: 1;
+  display: flex;
+  padding: 10px;
+  gap: 10px;
+  border: 1px solid grey;
+  align-items: center;
+  justify-content: center;
+}
+
 div#shape-display {
   display: flex;
   flex: 2 1;
@@ -28,7 +39,7 @@ div#shape-display {
   }
 }
 
-div#color-form {
+div#shape-form {
   display: flex;
   flex: 1 1;
   background-color: whitesmoke;
@@ -36,10 +47,19 @@ div#color-form {
   flex-direction: column;
 }
 
-div#color-form > div {
+div#shape-form > div {
   display: flex;
   padding: 5px;
   gap: 10px;
+  width 100%;
   align-items: center;
   justify-content: center;
+
+  input {
+    width: 50px;
+  }
+  label {
+    width: 50px;
+    text-align: right;
+  }
 }

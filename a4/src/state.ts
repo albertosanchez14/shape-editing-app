@@ -14,18 +14,18 @@ export type SquareProps = {
 
 export type StarProps = {
   type: "star";
+  hue: number;
   r1: number;
   r2: number;
   points: number;
-  hue: number;
 };
 
 export type BullseyeProps = {
   type: "bullseye";
-  radius: number;
-  rings: number;
   hue: number;
   hue2: number;
+  radius: number;
+  rings: number;
 };
 
 export type CatProps = {
@@ -42,7 +42,8 @@ export const selectedShapes = computed(() => {
 });
 export const editShape = computed(() => {
   const selected = shapes.value.filter((shape) => shape.selected);
-  if (selected.length !== 1) return undefined;
+  if (selected.length === 0) return undefined;
+  if (selected.length > 1) return "multiple";
   return selected[0];
 });
 export const multiSelect = signal(false);
@@ -69,10 +70,10 @@ function createRandomShape(type: ShapeType): Shape {
         selected: false,
         props: {
           type: "star",
+          hue: Math.round(random(360)),
           r1: 15,
           r2: Math.round(random(20, 45)),
           points: Math.round(random(3, 10)),
-          hue: Math.round(random(360)),
         } as StarProps,
       };
     case "bullseye":
@@ -81,10 +82,10 @@ function createRandomShape(type: ShapeType): Shape {
         selected: false,
         props: {
           type: "bullseye",
-          radius: 45,
-          rings: Math.round(random(2, 5)),
           hue: Math.round(random(360)),
           hue2: Math.round(random(360)),
+          radius: 45,
+          rings: Math.round(random(2, 5)),
         } as BullseyeProps,
       };
     case "cat":
