@@ -40,6 +40,11 @@ export const shapes = signal<Shape[]>([]);
 export const selectedShapes = computed(() => {
   return shapes.value.filter((shape) => shape.selected).length;
 });
+export const editShape = computed(() => {
+  const selected = shapes.value.filter((shape) => shape.selected);
+  if (selected.length !== 1) return undefined;
+  return selected[0];
+});
 export const multiSelect = signal(false);
 
 export const init = () => {

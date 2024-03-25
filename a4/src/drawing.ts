@@ -1,23 +1,27 @@
 import { Ref } from "preact";
 
-import { Shape } from "./state";
+import { Shape, StarProps } from "./state";
 
 /**
  * Drawing class to draw shapes on a canvas
  */
 export class Drawing {
-
+    private canvas: HTMLCanvasElement = document.createElement("canvas");
+    /**
+     * Draw a star on a 100x100 canvas element
+     * @param shape The shape to draw
+     * @returns The canvas with the star drawn on it
+     */
     drawStar(shape: Shape) {
-        const prop = shape.props as StarProps;
-        const canvas = document.createElement("canvas");
-        canvas.width = 100;
-        this.canvasRef.current.height = 100;
-        const ctx = canvasRef.current.getContext("2d");
+        const prop = shape.props as StarProps;        
+        this.canvas.width = 100;
+        this.canvas.height = 100;
+        const ctx = this.canvas.getContext("2d");
         if (ctx === null) {
             throw new Error("2d context not supported");
         }
-        const centerX = canvasRef.current.width / 2;
-        const centerY = canvasRef.current.height / 2;
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
         ctx.fillStyle = `hsl(${prop.hue}, 50%, 50%)`;
         ctx.strokeStyle = "black";
         ctx.lineWidth = 2;
@@ -39,5 +43,6 @@ export class Drawing {
         ctx.closePath();
         ctx.stroke();
         ctx.fill();
+        return this.canvas;
     }
 }

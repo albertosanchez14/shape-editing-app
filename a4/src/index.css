@@ -16,8 +16,7 @@ body {
 div#app {
   display: flex;
   height: 100vh;
-  min-width: 620px;
-  min-height: 420px;
+  width: 100vw;
 }
 
 div#left-view {

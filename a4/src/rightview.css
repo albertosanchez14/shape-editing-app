@@ -8,23 +8,35 @@ div#editor {
   flex-direction: column;
 }
 
-div.right > #color-display {
+div#shape-display {
   display: flex;
-  flex: 2;
+  flex: 2 1;
   background-color: whitesmoke;
   align-items: center;
   justify-content: center;
+
+  * {
+    display: flex;
+    flex: 2 1;
+    aspect-ratio: 1/1;
+    margin: 0;
+    padding: 0;
+  }
+
+  .square {
+    border: 2px solid black;
+  }
 }
 
-div.right > #color-form {
+div#color-form {
   display: flex;
-  flex: 1;
+  flex: 1 1;
   background-color: whitesmoke;
   border: 1px solid grey;
   flex-direction: column;
 }
 
-div.right > #color-form > div {
+div#color-form > div {
   display: flex;
   padding: 5px;
   gap: 10px;
