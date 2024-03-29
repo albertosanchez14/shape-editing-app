@@ -67,7 +67,7 @@ function ColorForm({ props }: ColorFormProps) {
   });
   const values = Object.values(viewProp());
   const inputRefs = keys.map(() => useRef<HTMLInputElement>(null));
-  const handleInput = (index: number) => (e: Event) => {
+  const handleInput = (index: number) => () => {
     const inputRef = inputRefs[index];
     if (inputRef.current === null) return;
     // Get the range values of the input
