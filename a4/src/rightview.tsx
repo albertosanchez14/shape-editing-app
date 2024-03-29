@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "preact/hooks";
+import { useRef } from "preact/hooks";
 
 // Components imports
 import ShapeItem from "./shapeitem";
@@ -38,41 +38,53 @@ type ColorFormProps = {
 };
 
 function ColorForm({ props }: ColorFormProps) {
+  const viewProp = () => {
+    switch (props.type) {
+      case "square":
+        return { hue: props.hue };
+      case "star":
+        return {
+          hue: props.hue,
+          points: props.points,
+          radius: props.r2,
+        };
+      case "bullseye":
+        return {
+          hue1: props.hue,
+          hue2: props.hue2,
+          rings: props.rings,
+        };
+      case "cat":
+        return { hue: props.hue, look: props.look };
+    }
+  };
   const shape = State.editShape.value as State.Shape;
-  const keys = Object.keys(props).filter((key) => key !== "type");
-  const values = Object.values(props).slice(1);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // useEffect(() => {
-  //   if (inputRef.current === null) return;
-  //   console.log("ref.current");
-  //   State.updateShape(
-  //     Number(inputRef.current.id),
-  //     inputRef.current.className,
-  //     Number(inputRef.current.value)
-  //   );
-  //   inputRef.current.value = values.toString();
-  //   inputRef.current.max = "360";
-  //   inputRef.current.min = "0";
-  // }, [props]);
-  
-  console.log("render");
-  console.log(shape);
-  
-  const handleChange = (e: Event) => {
+  const keys = Object.keys(viewProp());
+  const keyUn = keys.map((key) => {
+    if (key === "hue1") return "hue";
+    if (key === "radius") return "r2";
+    return key;
+  });
+  const values = Object.values(viewProp());
+  const inputRefs = keys.map(() => useRef<HTMLInputElement>(null));
+  const handleInput = (index: number) => (e: Event) => {
+    const inputRef = inputRefs[index];
     if (inputRef.current === null) return;
-    console.log("ref.current");
-    console.log(shape);
-    console.log(State.shapes.value);
+    // Get the range values of the input
+    const [min, max] = new State.Validator().getRange(
+      inputRef.current.className
+    );
+    if (min === null || max === null) return;
+    console.log(min, max);
+    inputRef.current.min = min.toString();
+    inputRef.current.max = max.toString();
+    // Update the shape
     State.updateShape(
       Number(inputRef.current.id),
       inputRef.current.className,
       Number(inputRef.current.value)
     );
-    inputRef.current.max = "360";
-    inputRef.current.min = "0";
   };
-
   return (
     <div id="shape-form">
       {keys.map((key, index) => (
@@ -81,10 +93,10 @@ function ColorForm({ props }: ColorFormProps) {
           <input
             type="number"
             id={shape.id.toString()}
-            class={key}
-            ref={inputRef}
+            class={keyUn[index]}
+            ref={inputRefs[index]}
             value={values[index]}
-            onChange={handleChange}
+            onInput={handleInput(index)}
           />
         </div>
       ))}

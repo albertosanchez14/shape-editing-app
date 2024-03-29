@@ -57,7 +57,7 @@ div#shape-form > div {
     width: 50px;
   }
   input:out-of-range {
-    background-color: lightcoral;
+    outline: 2px solid red;
   }
   label {
     width: 50px;

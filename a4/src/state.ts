@@ -15,9 +15,9 @@ export type SquareProps = {
 export type StarProps = {
   type: "star";
   hue: number;
+  points: number;
   r1: number;
   r2: number;
-  points: number;
 };
 
 export type BullseyeProps = {
@@ -71,9 +71,9 @@ function createRandomShape(type: ShapeType): Shape {
         props: {
           type: "star",
           hue: Math.round(random(360)),
+          points: Math.round(random(3, 10)),
           r1: 15,
           r2: Math.round(random(20, 45)),
-          points: Math.round(random(3, 10)),
         } as StarProps,
       };
     case "bullseye":
@@ -138,11 +138,45 @@ export const unSelectAll = (unAll: boolean) => {
 };
 
 export const updateShape = (id: number, key: string, value: number) => {
-  console.log(id, key, value);
   const shape = shapes.value.find((shape) => shape.id === id);
-  console.log(shape);
   if (!shape) return;
-  const property = key as keyof Shape["props"];
-  (shape.props)[property] = value;
-  console.log(shape);
+  if (!new Validator().validate(key, value)) { return; }
+  shape.props[key] = value;
+  shapes.value = [...shapes.value];
 };
+
+export class Validator {
+  constructor() {}
+  public validate = (key: string, value: number) => {
+    switch (key) {
+      case "hue":
+        return (value >= 0) && (value <= 360);
+      case "hue2":
+        return (value >= 0) && (value <= 360);
+      case "r2":
+        return (value >= 20) && (value <= 45);
+      case "points":
+        return (value >= 3) && (value <= 10);
+      case "rings":
+        return (value >= 2) && (value <= 5);
+      case "look":
+        return ["left", "centre", "right"].includes(value.toString());
+    }
+  };
+  public getRange = (key: string) => {
+    switch (key) {
+      case "hue":
+        return [0, 360];
+      case "hue2":
+        return [0, 360];
+      case "r2":
+        return [20, 45];
+      case "points":
+        return [3, 10];
+      case "rings":
+        return [2, 5];
+      default:
+        return [null, null];
+    }
+  };
+}
