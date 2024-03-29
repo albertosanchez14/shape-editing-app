@@ -105,7 +105,7 @@ function createRandomShape(type: ShapeType): Shape {
 }
 
 export const addShape = (type: ShapeType) => {
-  if (shapes.value.length >= 25) return;     
+  if (shapes.value.length >= 25) return;
   shapes.value = [...shapes.value, createRandomShape(type)];
 };
 
@@ -135,4 +135,14 @@ export const clearShapes = () => {
 export const unSelectAll = (unAll: boolean) => {
   if (!unAll) return;
   shapes.value = shapes.value.map((s) => ({ ...s, selected: false }));
-}
+};
+
+export const updateShape = (id: number, key: string, value: number) => {
+  console.log(id, key, value);
+  const shape = shapes.value.find((shape) => shape.id === id);
+  console.log(shape);
+  if (!shape) return;
+  const property = key as keyof Shape["props"];
+  (shape.props)[property] = value;
+  console.log(shape);
+};

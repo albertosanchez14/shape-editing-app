@@ -1,24 +1,15 @@
-import { useEffect, useRef } from "react";
+import { useRef, useEffect } from "preact/hooks";
+
+// Components imports
+import ShapeItem from "./shapeitem";
+
+// Styles
 import "./rightview.css";
 
-import ShapeItem from "./shapeitem";
+// State
 import * as State from "./state";
 
 export default function EditorView() {
-  // TODO: Implement the EditorView component,
-  // check why it does not change when the selected shape changes
-  // let editorRef = useRef<HTMLCanvasElement>(null);
-  // let shapeItem = null;
-  // useEffect(() => {
-  //   // if (editorRef.current === null) return;
-  //   // if (State.editShape.value !== undefined) {
-  //   //   shapeItem = <ShapeItem shape={State.editShape.value} />;
-  //   // }
-  // }, [State.shapes.value]);
-
-  const shape = State.editShape.value;
-  console.log(shape);
-
   // No shape selected
   if (State.editShape.value === undefined) {
     return <NoShape />;
@@ -47,14 +38,54 @@ type ColorFormProps = {
 };
 
 function ColorForm({ props }: ColorFormProps) {
+  const shape = State.editShape.value as State.Shape;
   const keys = Object.keys(props).filter((key) => key !== "type");
   const values = Object.values(props).slice(1);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // useEffect(() => {
+  //   if (inputRef.current === null) return;
+  //   console.log("ref.current");
+  //   State.updateShape(
+  //     Number(inputRef.current.id),
+  //     inputRef.current.className,
+  //     Number(inputRef.current.value)
+  //   );
+  //   inputRef.current.value = values.toString();
+  //   inputRef.current.max = "360";
+  //   inputRef.current.min = "0";
+  // }, [props]);
+  
+  console.log("render");
+  console.log(shape);
+  
+  const handleChange = (e: Event) => {
+    if (inputRef.current === null) return;
+    console.log("ref.current");
+    console.log(shape);
+    console.log(State.shapes.value);
+    State.updateShape(
+      Number(inputRef.current.id),
+      inputRef.current.className,
+      Number(inputRef.current.value)
+    );
+    inputRef.current.max = "360";
+    inputRef.current.min = "0";
+  };
+
   return (
     <div id="shape-form">
       {keys.map((key, index) => (
         <div className="shape-input">
           <label>{key.charAt(0).toUpperCase() + key.slice(1)}</label>
-          <input type="number" value={values[index]} />
+          <input
+            type="number"
+            id={shape.id.toString()}
+            class={key}
+            ref={inputRef}
+            value={values[index]}
+            onChange={handleChange}
+          />
         </div>
       ))}
     </div>

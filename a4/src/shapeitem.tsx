@@ -41,7 +41,7 @@ function Square({ shape }: ShapeProp) {
     }
     ctx.fillStyle = `hsl(${prop.hue}, 50%, 50%)`;
     ctx.fillRect(0, 0, 100, 100);
-  }, []);
+  }, [shape, prop.hue]);
   return <canvas class="square" id={shape.id.toString()} ref={canvasRef} />;
 }
 function Star({ shape }: ShapeProp) {
@@ -78,7 +78,7 @@ function Star({ shape }: ShapeProp) {
     ctx.closePath();
     ctx.stroke();
     ctx.fill();
-  }, []);
+  }, [shape]);
   return <canvas class="star" id={shape.id.toString()} ref={canvasRef} />;
 }
 function Bullseye({ shape }: ShapeProp) {
@@ -109,7 +109,7 @@ function Bullseye({ shape }: ShapeProp) {
       ctx.stroke();
       ctx.closePath();
     }
-  }, []);
+  }, [shape]);
   return <canvas class="bullseye" id={shape.id.toString()} ref={canvasRef} />;
 }
 function Cat({ shape }: ShapeProp) {
@@ -183,6 +183,6 @@ function Cat({ shape }: ShapeProp) {
     gc.arc(16 + x, -9, 5, 0, Math.PI * 2);
     gc.fill();
     gc.restore();
-  }, []);
+  }, [shape]);
   return <canvas class="cat" id={shape.id.toString()} ref={canvasRef} />;
 }

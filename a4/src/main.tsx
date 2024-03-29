@@ -4,7 +4,7 @@ import { render } from "preact";
 import ToolBarView from "./toolbar";
 import ShapeListView from "./shapelist";
 import StatusBarView from "./statusbar";
-import RightView from "./rightview";
+import EditorView from "./rightview";
 
 // Styles
 import "./index.css";
@@ -36,7 +36,9 @@ function App() {
         <ShapeListView />
         <StatusBarView />
       </div>
-      <RightView />
+      <div id="right-view">
+        <EditorView />
+      </div>
     </>
   );
 }

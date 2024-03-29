@@ -1,5 +1,4 @@
 div#editor {
-  background-color: whitesmoke;
   flex: 1;
   display: flex;
   padding: 10px;
@@ -51,12 +50,14 @@ div#shape-form > div {
   display: flex;
   padding: 5px;
   gap: 10px;
-  width 100%;
   align-items: center;
   justify-content: center;
 
   input {
     width: 50px;
+  }
+  input:out-of-range {
+    background-color: lightcoral;
   }
   label {
     width: 50px;
