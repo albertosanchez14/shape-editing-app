@@ -10,11 +10,9 @@ div#tool-bar {
 div#tool-bar > button {
     width: 80px;
 }
-div#tool-bar > button.enabled:hover {
-}
 div#tool-bar > button.enabled {
-    
+    opacity: 100%;
 }
 div#tool-bar > button.disabled {
-    background-color: lightgray;
+    opacity: 50%;
 }

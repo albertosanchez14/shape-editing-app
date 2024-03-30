@@ -75,7 +75,6 @@ function ColorForm({ props }: ColorFormProps) {
       inputRef.current.className
     );
     if (min === null || max === null) return;
-    console.log(min, max);
     inputRef.current.min = min.toString();
     inputRef.current.max = max.toString();
     // Update the shape

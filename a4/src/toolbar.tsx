@@ -17,24 +17,29 @@ export default function ToolBarView() {
     if (addRef.current === null) return;
     if (delRef.current === null) return;
     if (clearRef.current === null) return;
-    console.log(State.shapes.value.length, State.selectedShapes.value);
     // Disable the add button if the max is reached
     if (State.shapes.value.length >= 25) {
       addRef.current.className = "disabled";
+      addRef.current.disabled = true;
     } else {
       addRef.current.className = "enabled";
+      addRef.current.disabled = false;
     }
     // Disable the remove button if there are no selected shapes
     if (State.selectedShapes.value === 0) {
       delRef.current.className = "disabled";
+      delRef.current.disabled = true;
     } else {
       delRef.current.className = "enabled";
+      delRef.current.disabled = false;
     }
     // Disable the clear button if there are no shapes
     if (State.shapes.value.length === 0) {
       clearRef.current.className = "disabled";
+      clearRef.current.disabled = true;
     } else {
       clearRef.current.className = "enabled";
+      clearRef.current.disabled = false;
     }
   }, [State.shapes.value, State.selectedShapes.value]);
 
