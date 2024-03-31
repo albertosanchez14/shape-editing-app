@@ -3,8 +3,8 @@
   <a href="https://github.com/albertosanchez14/shape-editing-app">
     <img src="https://github.com/albertosanchez14/shape-editing-app/blob/master/public/a3-screencap.png" alt="Preview" width=800/>
   </a>
-  This web application allows users to manage and edit shapes. It features a left and right side layout, with the left side containing a toolbar, a shape list, and a status bar, while the right side displays details or messages based on the selected shape.
 </div>
+This web application allows users to manage and edit shapes. It features a left and right side layout, with the left side containing a toolbar, a shape list, and a status bar, while the right side displays details or messages based on the selected shape.
 
 ## Features
 
